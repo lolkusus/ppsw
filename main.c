@@ -3,8 +3,8 @@
 void Delay(unsigned int uiDelay) 
 {
 
-	uiDelay = uiDelay * 7500;
 	int iLoopCounter;
+	uiDelay = uiDelay * 7500;
 	for(iLoopCounter=0;iLoopCounter<uiDelay;iLoopCounter++){
 		
 	}
