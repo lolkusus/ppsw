@@ -1,9 +1,11 @@
 #include <LPC21xx.H>
 
-void Delay() 
+void Delay(unsigned int uiDelay) 
 {
+
+	uiDelay = uiDelay * 7500;
 	int iLoopCounter;
-	for(iLoopCounter=0;iLoopCounter<7500000;iLoopCounter++){
+	for(iLoopCounter=0;iLoopCounter<uiDelay;iLoopCounter++){
 		
 	}
 }
@@ -16,9 +18,9 @@ int main()
 	while(1)
 	{
 		
-		Delay();
+		Delay(1);
 		IO1SET = 0x10000;
-		Delay();
+		Delay(1000);
 		IO1CLR = 0x10000;
 		
 	}
