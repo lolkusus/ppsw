@@ -15,10 +15,18 @@ void Delay(unsigned int uiDelay)
 	}
 }
 
-int main()
+void LedInit()
 {
 	
 	IO1DIR = LED0_bm | LED1_bm | LED2_bm | LED3_bm;
+	IO1SET = LED0_bm;
+	
+}
+
+int main()
+{
+	
+	LedInit();
 	
 	while(1)
 	{
