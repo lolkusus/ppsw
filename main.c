@@ -15,11 +15,33 @@ void Delay(unsigned int uiDelay)
 	}
 }
 
+void LedOn(unsigned char ucLedIndeks)
+{
+	
+	IO1CLR = LED0_bm | LED1_bm | LED2_bm | LED3_bm;
+	
+	switch(ucLedIndeks){
+		case 0:
+			IO1SET = LED0_bm;
+			break;
+		case 1:
+			IO1SET = LED1_bm;
+			break;
+		case 2:
+			IO1SET = LED2_bm;
+			break;
+		case 3:
+			IO1SET = LED3_bm;
+			break;
+	}
+	
+}
+
 void LedInit()
 {
 	
 	IO1DIR = LED0_bm | LED1_bm | LED2_bm | LED3_bm;
-	IO1SET = LED0_bm;
+	LedOn(0);
 	
 }
 
@@ -31,21 +53,17 @@ int main()
 	while(1)
 	{
 		
-		IO1SET = LED0_bm;
+		LedOn(0);
 		Delay(250);
-		IO1CLR = LED0_bm;
 		
-		IO1SET = LED1_bm;
+		LedOn(1);
 		Delay(250);
-		IO1CLR = LED1_bm;
 
-		IO1SET = LED2_bm;
+		LedOn(2);
 		Delay(250);
-		IO1CLR = LED2_bm;
 
-		IO1SET = LED3_bm;
+		LedOn(3);
 		Delay(250);
-		IO1CLR = LED3_bm;
 		
 	}
 	
