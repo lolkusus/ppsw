@@ -18,7 +18,7 @@ int main()
 	while(1)
 	{
 		
-		Delay(1);
+		Delay(1000);
 		IO1SET = 0x10000;
 		Delay(1000);
 		IO1CLR = 0x10000;

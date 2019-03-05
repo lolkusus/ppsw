@@ -43,3 +43,59 @@ compiling main.c...
 main.c(7): error:  #268: declaration may not appear after executable statement in block
 ".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
 Target not created
+Rebuild target 'Target 1'
+assembling Startup.s...
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Load "C:\\Users\\Dominik\\Documents\\GitHub\\ppsw\\Cwiczenia42.axf" 
+Internal DLL Error
+Rebuild target 'Target 1'
+assembling Startup.s...
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Rebuild target 'Target 1'
+assembling Startup.s...
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Build target 'Target 1'
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Clean started: Project: 'Cwiczenia42'
+   deleting intermediate output files for target 'Target 1'
+Rebuild target 'Target 1'
+assembling Startup.s...
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Rebuild target 'Target 1'
+assembling Startup.s...
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Rebuild target 'Target 1'
+assembling Startup.s...
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Build target 'Target 1'
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Rebuild target 'Target 1'
+assembling Startup.s...
+compiling main.c...
+main.c(7): error:  #268: declaration may not appear after executable statement in block
+".\Cwiczenia42.axf" - 1 Errors, 0 Warning(s).
+Target not created
