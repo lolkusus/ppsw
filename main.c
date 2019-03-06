@@ -87,6 +87,16 @@ void LedStep(eDirection Direction)
 	LedOn(uiLedCounter % 4);
 }
 
+void LedStepLeft()
+{
+	LedStep(LEFT);
+}
+
+void LedStepRight()
+{
+	LedStep(RIGHT);
+}
+
 void LedInit()
 {
 	
@@ -112,11 +122,11 @@ int main()
 		
 		switch(eKeyboardRead()){
 			case BUTTON_1:
-				LedStep(RIGHT);
+				LedStepRight();
 				Delay(100);
 				break;
 			case BUTTON_2:
-				LedStep(LEFT);
+				LedStepLeft();
 				Delay(100);
 				break;
 			default:
