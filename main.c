@@ -20,11 +20,9 @@ typedef enum{
 
 void Delay(unsigned int uiDelay) 
 {
-
 	int iLoopCounter;
 	uiDelay = uiDelay * 7500;
 	for(iLoopCounter=0;iLoopCounter<uiDelay;iLoopCounter++){
-		
 	}
 }
 
@@ -34,22 +32,22 @@ enum KeyboardState eKeyboardRead()
 	
 	iButtonState = ~(IO0PIN & (BUT0_bm | BUT1_bm | BUT2_bm | BUT3_bm));
 	
-	if ((iButtonState & BUT0_bm) == BUT0_bm)
+	if ((iButtonState & BUT0_bm) != 0) // wcisniety 0x10 & 0x10 = 0x10, puszczony 0x00 & 0x10 == 0x00
 	{
 		return BUTTON_1;
 	}
 	
-		if ((iButtonState & BUT1_bm) == BUT1_bm)
+		if ((iButtonState & BUT1_bm) != 0)// wcisniety 0x20 & 0x20 == 0x20, puszczony 0x00 & 0x20 == 00
 	{
 		return BUTTON_2;
 	}
 	
-		if ((iButtonState & BUT2_bm) == BUT2_bm)
+		if ((iButtonState & BUT2_bm) != 0)
 	{
 		return BUTTON_3;
 	}
 	
-		if ((iButtonState & BUT3_bm) == BUT3_bm)
+		if ((iButtonState & BUT3_bm) != 0)
 	{
 		return BUTTON_4;
 	}
@@ -99,41 +97,30 @@ void LedStepRight()
 
 void LedInit()
 {
-	
 	IO1DIR = IO1DIR | (LED0_bm | LED1_bm | LED2_bm | LED3_bm);
-	
 }
 
 void KeyboardInit()
 {
-	
 		IO0DIR = IO0DIR & ~(BUT0_bm | BUT1_bm | BUT2_bm | BUT3_bm);
-	
 }
 
 int main()
 {
-	
 	LedInit();
 	KeyboardInit();
 	
 	while(1)
 	{
-		
 		switch(eKeyboardRead()){
 			case BUTTON_1:
 				LedStepRight();
-				Delay(100);
 				break;
 			case BUTTON_2:
 				LedStepLeft();
-				Delay(100);
 				break;
-			default:
-				LedOn(4);
 		}
-		
+		Delay(100);
 	}
-	
 }
 

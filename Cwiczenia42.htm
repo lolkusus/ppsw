@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Cwiczenia42.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Cwiczenia42.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Wed Mar 06 09:06:07 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Wed Mar 06 09:30:26 2019
 <BR><P>
 <H3>Maximum Stack Usage =          8 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -184,13 +184,12 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[20]"></a>eKeyboardRead</STRONG> (ARM, 104 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[20]"></a>eKeyboardRead</STRONG> (ARM, 88 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[1b]"></a>LedOn</STRONG> (ARM, 136 bytes, Stack size 0 bytes, main.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[1a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LedStep
+<BR><BR>[Called By]<UL><LI><a href="#[1a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LedStep
 </UL>
 
 <P><STRONG><a name="[1a]"></a>LedStep</STRONG> (ARM, 48 bytes, Stack size 4 bytes, main.o(.text))
@@ -226,14 +225,13 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[a]"></a>main</STRONG> (ARM, 100 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[a]"></a>main</STRONG> (ARM, 76 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = main &rArr; LedStepRight &rArr; LedStep
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;KeyboardInit
 <LI><a href="#[1e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LedInit
 <LI><a href="#[1d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LedStepRight
 <LI><a href="#[1c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LedStepLeft
-<LI><a href="#[1b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LedOn
 <LI><a href="#[20]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eKeyboardRead
 <LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay
 </UL>
