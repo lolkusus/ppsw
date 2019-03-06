@@ -11,6 +11,7 @@
 #define BUT3_bm 0x80
 
 enum KeyboardState {RELASED, BUTTON_1, BUTTON_2, BUTTON_3, BUTTON_4};
+unsigned int uiLedCounter = 0;
 
 void Delay(unsigned int uiDelay) 
 {
@@ -74,6 +75,12 @@ void LedOn(unsigned char ucLedIndeks)
 	
 }
 
+void StepLeft()
+{
+	uiLedCounter = uiLedCounter + 1;
+	LedOn(uiLedCounter % 4);
+}
+
 void LedInit()
 {
 	
@@ -97,23 +104,8 @@ int main()
 	while(1)
 	{
 		
-		switch(eKeyboardRead()){
-			case BUTTON_1: 
-				LedOn(0);
-				break;
-			case BUTTON_2: 
-				LedOn(1);
-				break;
-			case BUTTON_3: 
-				LedOn(2);
-				break;
-			case BUTTON_4: 
-				LedOn(3);
-				break;
-			case RELASED:
-				LedOn(4);
-			break;
-		}
+		StepLeft();
+		Delay(250);
 		
 	}
 	
