@@ -10,7 +10,7 @@
 #define BUT2_bm 0x20
 #define BUT3_bm 0x80
 
-enum ButtonState {RELASED, PRESSED};
+enum KeyboardState {RELASED, BUTTON_1, BUTTON_2, BUTTON_3, BUTTON_4};
 
 void Delay(unsigned int uiDelay) 
 {
@@ -22,15 +22,32 @@ void Delay(unsigned int uiDelay)
 	}
 }
 
-enum ButtonState ReadButton1()
+enum KeyboardState eKeyboardRead()
 {
+	int iButtonState;
 	
-	if ((IO0PIN & BUT1_bm) == 0)
+	iButtonState = ~(IO0PIN & (BUT0_bm | BUT1_bm | BUT2_bm | BUT3_bm));
+	
+	if ((iButtonState & BUT0_bm) == BUT0_bm)
 	{
-		
-		return PRESSED;
-		
+		return BUTTON_1;
 	}
+	
+		if ((iButtonState & BUT1_bm) == BUT1_bm)
+	{
+		return BUTTON_2;
+	}
+	
+		if ((iButtonState & BUT2_bm) == BUT2_bm)
+	{
+		return BUTTON_3;
+	}
+	
+		if ((iButtonState & BUT3_bm) == BUT3_bm)
+	{
+		return BUTTON_4;
+	}
+	
 	return RELASED;
 	
 }
@@ -80,12 +97,21 @@ int main()
 	while(1)
 	{
 		
-		switch(ReadButton1()){
-			case PRESSED: 
+		switch(eKeyboardRead()){
+			case BUTTON_1: 
+				LedOn(0);
+				break;
+			case BUTTON_2: 
 				LedOn(1);
 				break;
+			case BUTTON_3: 
+				LedOn(2);
+				break;
+			case BUTTON_4: 
+				LedOn(3);
+				break;
 			case RELASED:
-				LedOn(0);
+				LedOn(4);
 			break;
 		}
 		
