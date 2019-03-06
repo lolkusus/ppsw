@@ -103,7 +103,6 @@ void KeyboardInit()
 
 int main()
 {
-	int iLoopCounter = 0;
 	
 	LedInit();
 	KeyboardInit();
@@ -111,16 +110,17 @@ int main()
 	while(1)
 	{
 		
-		for(iLoopCounter=0;iLoopCounter<10;iLoopCounter++)
-		{
-			LedStep(RIGHT);
-			Delay(250);
-		}
-		
-		for(iLoopCounter=0;iLoopCounter<10;iLoopCounter++)
-		{
-			LedStep(LEFT);
-			Delay(250);
+		switch(eKeyboardRead()){
+			case BUTTON_1:
+				LedStep(RIGHT);
+				Delay(100);
+				break;
+			case BUTTON_2:
+				LedStep(LEFT);
+				Delay(100);
+				break;
+			default:
+				LedOn(4);
 		}
 		
 	}
