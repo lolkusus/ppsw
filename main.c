@@ -5,6 +5,8 @@
 #define LED2_bm 0x40000
 #define LED3_bm 0x80000
 
+#define BUT1_bm 0x40
+
 void Delay(unsigned int uiDelay) 
 {
 
@@ -13,6 +15,19 @@ void Delay(unsigned int uiDelay)
 	for(iLoopCounter=0;iLoopCounter<uiDelay;iLoopCounter++){
 		
 	}
+}
+
+int ReadButton1()
+{
+	
+	if ((IO0PIN & BUT1_bm) == 0)
+	{
+		
+		return 1;
+		
+	}
+	return 0;
+	
 }
 
 void LedOn(unsigned char ucLedIndeks)
@@ -41,7 +56,7 @@ void LedInit()
 {
 	
 	IO1DIR = IO1DIR | (LED0_bm | LED1_bm | LED2_bm | LED3_bm);
-	LedOn(0);
+	IO0DIR = IO0DIR & ~BUT1_bm;
 	
 }
 
@@ -53,17 +68,14 @@ int main()
 	while(1)
 	{
 		
-		LedOn(0);
-		Delay(250);
-		
-		LedOn(1);
-		Delay(250);
-
-		LedOn(2);
-		Delay(250);
-
-		LedOn(3);
-		Delay(250);
+		if (ReadButton1() == 0)
+		{
+			LedOn(0);
+		}
+		else
+		{
+			LedOn(1);
+		}
 		
 	}
 	
