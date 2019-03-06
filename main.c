@@ -82,6 +82,7 @@ void LedOn(unsigned char ucLedIndeks)
 
 void LedStep(eDirection Direction)
 {
+	static unsigned int uiLedCounter;
 	uiLedCounter = uiLedCounter + Direction;
 	LedOn(uiLedCounter % 4);
 }
