@@ -81,6 +81,12 @@ void StepLeft()
 	LedOn(uiLedCounter % 4);
 }
 
+void StepRight()
+{
+	uiLedCounter = uiLedCounter - 1;
+	LedOn(uiLedCounter % 4);
+}
+
 void LedInit()
 {
 	
