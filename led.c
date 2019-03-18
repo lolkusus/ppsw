@@ -53,4 +53,5 @@ void LedStepRight()
 void LedInit()
 {
 	IO1DIR = IO1DIR | (LED0_bm | LED1_bm | LED2_bm | LED3_bm);
+	LedOn(0);
 }

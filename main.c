@@ -12,22 +12,23 @@ void Delay(unsigned int uiDelay)
 
 int main()
 {
+	enum LedState{LEFT, RIGHT};
+	enum LedState eLedState = LEFT;
 	LedInit();
 	KeyboardInit();
 	
 	while(1)
 	{
-		switch(eKeyboardRead()){
-			case BUTTON_1:
+		switch(eLedState){
+			case LEFT:
 				LedStepRight();
+				eLedState = RIGHT;
 				break;
-			case BUTTON_2:
+			case RIGHT:
 				LedStepLeft();
-				break;
-			default:
+				eLedState = LEFT;
 				break;
 		}
-		Delay(100);
+		Delay(250);
 	}
 }
-
