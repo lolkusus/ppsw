@@ -1,10 +1,10 @@
 #include <LPC21xx.H>
 #include "keyboard.h"
 
-#define BUT0_bm 0x10
-#define BUT1_bm 0x40
-#define BUT2_bm 0x20
-#define BUT3_bm 0x80
+#define BUT0_bm (1<<4)
+#define BUT1_bm (1<<6)
+#define BUT2_bm (1<<5)
+#define BUT3_bm (1<<7)
 
 enum KeyboardState eKeyboardRead()
 {
