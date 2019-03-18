@@ -12,36 +12,33 @@ void Delay(unsigned int uiDelay)
 
 int main()
 {
-	enum LedState{LEFT,RIGHT};
-	enum LedState eLedState = LEFT;
+	enum MoveState{MOVE, STOP};
+	enum MoveState eMoveState = STOP;
 	unsigned char ucMoveCounter = 0;
 	LedInit();
 	KeyboardInit();
 	
 	while(1)
 	{
-		switch(eLedState){
-			case LEFT:
-				LedStepLeft();
-				if (ucMoveCounter == 2)
+		switch(eMoveState){
+			case MOVE:
+				if (ucMoveCounter < 2)
 				{
-					ucMoveCounter = 0;
-					eLedState = RIGHT;
+					LedStepRight();
+					ucMoveCounter++;
+					Delay(250);
 				}
 				else
-					ucMoveCounter++;
+				{
+					LedStepRight();
+					ucMoveCounter = 0;
+					eMoveState = STOP;
+				}
 				break;
-			case RIGHT:
-				LedStepRight();
-				if (ucMoveCounter == 2)
-				{
-					ucMoveCounter = 0;
-					eLedState = LEFT;
-				}
-				else
-					ucMoveCounter++;
+			case STOP:
+				if(eKeyboardRead() == BUTTON_1)
+					eMoveState = MOVE;
 				break;
 		}
-		Delay(250);
 	}
 }
