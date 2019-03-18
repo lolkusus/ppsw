@@ -14,15 +14,15 @@ enum KeyboardState {RELASED, BUTTON_1, BUTTON_2, BUTTON_3, BUTTON_4};
 unsigned int uiLedCounter = 0;
 
 typedef enum{
-	RIGHT = -1,
-	LEFT = 1
+	RIGHT,
+	LEFT
 } eDirection;
 
 void Delay(unsigned int uiDelay) 
 {
-	int iLoopCounter;
+	int iDelayCounter;
 	uiDelay = uiDelay * 7500;
-	for(iLoopCounter=0;iLoopCounter<uiDelay;iLoopCounter++){
+	for(iDelayCounter=0;iDelayCounter<uiDelay;iDelayCounter++){
 	}
 }
 
@@ -81,7 +81,10 @@ void LedOn(unsigned char ucLedIndeks)
 void LedStep(eDirection Direction)
 {
 	static unsigned int uiLedCounter;
-	uiLedCounter = uiLedCounter + Direction;
+	if (Direction == RIGHT)
+		uiLedCounter = uiLedCounter - 1;
+	else if (Direction == LEFT)
+		uiLedCounter = uiLedCounter + 1;
 	LedOn(uiLedCounter % 4);
 }
 
@@ -118,6 +121,8 @@ int main()
 				break;
 			case BUTTON_2:
 				LedStepLeft();
+				break;
+			default:
 				break;
 		}
 		Delay(100);
