@@ -15,14 +15,13 @@ int main()
 {
 	LedInit();
 	KeyboardInit();
-	
-	InitTimer0();
+	InitTimer0Match0(250000);
 	
 	while(1)
 	{
 		LedOn(1);
-		WaitOnTimer0(250000);
+		WaitOnTimer0Match0();
 		LedOn(4);
-		WaitOnTimer0(250000);
+		WaitOnTimer0Match0();
 	}
 }

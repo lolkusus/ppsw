@@ -211,10 +211,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>1</ColumnNumber>
+      <ColumnNumber>25</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>1</TopLine>
-      <CurrentLine>15</CurrentLine>
+      <CurrentLine>25</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -259,10 +259,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>24</ColumnNumber>
+      <ColumnNumber>39</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>15</CurrentLine>
+      <TopLine>6</TopLine>
+      <CurrentLine>34</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\timer.c</PathWithFileName>
       <FilenameWithoutPath>timer.c</FilenameWithoutPath>
