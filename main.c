@@ -15,6 +15,7 @@ int main()
 {
 	LedInit();
 	KeyboardInit();
+	InitTimer0();
 	InitTimer0Match0(250000);
 	
 	while(1)
