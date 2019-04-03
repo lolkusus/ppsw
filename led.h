@@ -1,6 +1,7 @@
 typedef enum eDirection{
+	LEFT,
 	RIGHT,
-	LEFT
+	STOP
 } eDirection;
 
 void LedOn(unsigned char ucLedIndeks);
