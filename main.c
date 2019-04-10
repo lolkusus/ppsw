@@ -11,10 +11,7 @@ void Automat()
 
 	switch(eMoveState){
 		case CALLIB:
-			if(eReadDetector() == INACTIVE)
-				LedStepRight();
-			else
-				eMoveState = STOP;
+			
 			break;
 		case LEFT:
 			if(eKeyboardRead() == BUTTON_2)

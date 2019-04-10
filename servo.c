@@ -1,11 +1,21 @@
 #include <LPC21xx.H>
 #include "servo.h"
+#include "led.h"
 
 #define DETEKTOR_bm (1<<10)
 
 void DetectorInit()
 {
 	IO0DIR = IO0DIR & (~DETEKTOR_bm);
+}
+
+void ServoCallib(void)
+{
+	while(eReadDetector() == INACTIVE)
+	{
+			LedStepRight();
+	}
+	LedStepRight();
 }
 
 enum DetectorState eReadDetector()
