@@ -55,6 +55,7 @@ void UART_InitWithInt(unsigned int uiBaudRate){
 }	   
 
 int main (){
+	unsigned int uiPos = 0;
 	UART_InitWithInt(9600);
 	ServoInit(50);
 	
@@ -63,18 +64,14 @@ int main (){
 	switch(cOdebranyZnak){
 		case 'c':
 			ServoCallib();
+			uiPos = 0;
+		  cOdebranyZnak = '\0';
 			break;
 		
 		case '1':
-			ServoGoTo(12);
-			break;
-		
-		case '2':
-			ServoGoTo(24);
-			break;
-		
-		case '3':
-			ServoGoTo(36);
+			uiPos = uiPos + 12;
+			ServoGoTo(uiPos);
+	  	cOdebranyZnak = '\0';
 			break;
 		
 		default:

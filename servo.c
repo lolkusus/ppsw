@@ -19,7 +19,7 @@ void DetectorInit()
 
 void ServoCallib(void)
 {
-	ServoGoTo(0);
+	sServo.eState = CALLIB;
 }
 
 void Automat()
