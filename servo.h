@@ -9,7 +9,7 @@ IDLE,
 IN_PROGRESS
 } ServoState;
 
-typedef struct Servo
+extern struct sServo
 {
 enum ServoState eState;
 unsigned int uiCurrentPosition;

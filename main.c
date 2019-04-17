@@ -7,11 +7,17 @@
 void Automat()
 {
 	enum MoveState {STOP, LEFT, RIGHT, CALLIB};
-	static enum MoveState eMoveState = STOP;
+	static enum MoveState eMoveState = CALLIB;
 
 	switch(eMoveState){
 		case CALLIB:
-			
+			if(eReadDetector() == INACTIVE)
+				LedStepRight();
+			else
+			{
+				LedStepRight();
+				eMoveState=STOP;
+			}
 			break;
 		case LEFT:
 			if(eKeyboardRead() == BUTTON_2)
