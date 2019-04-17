@@ -56,29 +56,28 @@ void UART_InitWithInt(unsigned int uiBaudRate){
 
 int main (){
 	UART_InitWithInt(9600);
-	LedInit();
+	ServoInit(50);
 	
 	while(1){
 		
 	switch(cOdebranyZnak){
+		case 'c':
+			ServoCallib();
+			break;
+		
 		case '1':
-			LedOn(0);
+			ServoGoTo(12);
 			break;
 		
 		case '2':
-			LedOn(1);
+			ServoGoTo(24);
 			break;
 		
 		case '3':
-			LedOn(2);
-			break;
-		
-		case '4':
-			LedOn(3);
+			ServoGoTo(36);
 			break;
 		
 		default:
-			LedOn(4);
 			break;
 	}
 }

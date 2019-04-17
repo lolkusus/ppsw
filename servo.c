@@ -19,7 +19,7 @@ void DetectorInit()
 
 void ServoCallib(void)
 {
-	sServo.eState = CALLIB;
+	ServoGoTo(0);
 }
 
 void Automat()
@@ -61,7 +61,7 @@ void ServoInit(unsigned int uiServoFrequency)
 {
 	unsigned int uiPeriod = (unsigned int) (1000000/uiServoFrequency);
 	DetectorInit();
-	ServoCallib();
+	sServo.eState = CALLIB;
 	LedInit();
 	Timer0Interrupts_Init(uiPeriod,&Automat);
 }
