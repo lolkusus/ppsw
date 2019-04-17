@@ -5,6 +5,13 @@
 
 #define DETEKTOR_bm (1<<10)
 
+struct Servo
+{
+enum ServoState eState;
+unsigned int uiCurrentPosition;
+unsigned int uiDesiredPosition;
+}sServo;
+
 void DetectorInit()
 {
 	IO0DIR = IO0DIR & (~DETEKTOR_bm);
@@ -65,8 +72,8 @@ void ServoGoTo(unsigned int uiPosition){
 
 enum DetectorState eReadDetector()
 {
-	int iDetectorState = ~(IO0PIN & (DETEKTOR_bm));
-	if ((iDetectorState & DETEKTOR_bm) != 0)
+	int iDetectorState = IO0PIN & DETEKTOR_bm;
+	if (iDetectorState == 0)
 	{
 		return ACTIVE;
 	}

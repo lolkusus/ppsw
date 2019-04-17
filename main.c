@@ -4,18 +4,27 @@
 #include "timer_interrupts.h"
 #include "servo.h"
 
-tsServo sServo;
-
 int main (){
 	KeyboardInit();
 	ServoInit(50);
 	
 	while(1){
-		if(eKeyboardRead() == BUTTON_2)
+		switch(eKeyboardRead()){
+			
+		case BUTTON_2:
 			ServoGoTo(12);
-		if(eKeyboardRead() == BUTTON_3)
+			break;
+		
+		case BUTTON_3:
 			ServoGoTo(24);
-		if(eKeyboardRead() == BUTTON_4)
+			break;
+		
+		case BUTTON_4:
 			ServoGoTo(36);
+			break;
+		
+		default:
+			break;
 	}
+ }
 }
