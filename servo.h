@@ -19,5 +19,7 @@ unsigned int uiDesiredPosition;
 extern tsServo sServo;
 
 void ServoCallib(void);
+void ServoInit(unsigned int uiServoFrequency);
 void DetectorInit(void);
+void ServoGoTo(unsigned int uiPosition);
 enum DetectorState eReadDetector(void);
