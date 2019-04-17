@@ -9,12 +9,14 @@ IDLE,
 IN_PROGRESS
 } ServoState;
 
-extern struct sServo
+typedef struct sServo
 {
 enum ServoState eState;
 unsigned int uiCurrentPosition;
 unsigned int uiDesiredPosition;
-}sServo;
+}tsServo;
+
+extern tsServo sServo;
 
 void ServoCallib(void);
 void DetectorInit(void);

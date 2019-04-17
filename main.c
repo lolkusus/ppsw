@@ -4,51 +4,56 @@
 #include "timer_interrupts.h"
 #include "servo.h"
 
+tsServo sServo;
+
 void Automat()
 {
-	enum MoveState {STOP, LEFT, RIGHT, CALLIB};
-	static enum MoveState eMoveState = CALLIB;
-
-	switch(eMoveState){
+	switch(sServo.eState){
 		case CALLIB:
 			if(eReadDetector() == INACTIVE)
 				LedStepRight();
 			else
 			{
 				LedStepRight();
-				eMoveState=STOP;
+				sServo.eState = IDLE;
+				sServo.uiCurrentPosition = 0;
+				sServo.uiDesiredPosition = 0;
 			}
 			break;
-		case LEFT:
-			if(eKeyboardRead() == BUTTON_2)
-				eMoveState = STOP;
-			else
-				LedStepLeft();
-			break;
-		case RIGHT:
-			if(eKeyboardRead() == BUTTON_2)
-				eMoveState = STOP;
-			else
+			
+		case IN_PROGRESS:
+			if(sServo.uiDesiredPosition > sServo.uiCurrentPosition){
 				LedStepRight();
-			break;
-		case STOP:
-			if(eKeyboardRead() == BUTTON_1)
-				eMoveState = LEFT;
-			else if(eKeyboardRead() == BUTTON_3)
-				eMoveState = RIGHT;
-			else if(eKeyboardRead() == BUTTON_4)
-				eMoveState = CALLIB;
+				sServo.uiCurrentPosition++;
+			}
+			else if(sServo.uiDesiredPosition < sServo.uiCurrentPosition){
+				LedStepLeft();
+				sServo.uiCurrentPosition--;
+			}
+			else
+				sServo.eState = IDLE;		
+		break;
+		
+		case IDLE:
+			if(sServo.uiDesiredPosition != sServo.uiCurrentPosition)
+				sServo.eState = IN_PROGRESS;
+		break;
 		}
 }
 
 int main (){
-	unsigned int iMainLoopCtr;
 	LedInit();
 	KeyboardInit();
 	DetectorInit();
+	ServoCallib();
 	Timer0Interrupts_Init(20000,&Automat);
-
+	
 	while(1){
-	 	iMainLoopCtr++;
+		if(eKeyboardRead() == BUTTON_2)
+			sServo.uiDesiredPosition = 12;
+		if(eKeyboardRead() == BUTTON_3)
+			sServo.uiDesiredPosition = 24;
+		if(eKeyboardRead() == BUTTON_4)
+			sServo.uiDesiredPosition = 36;
 	}
 }

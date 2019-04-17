@@ -11,11 +11,7 @@ void DetectorInit()
 
 void ServoCallib(void)
 {
-	while(eReadDetector() == INACTIVE)
-	{
-			LedStepRight();
-	}
-	LedStepRight();
+	sServo.eState = CALLIB;
 }
 
 enum DetectorState eReadDetector()
