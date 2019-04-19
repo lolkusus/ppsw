@@ -22,7 +22,53 @@
 
 #define mIRQ_SLOT_ENABLE                           (1<<5)
 
+#define RECIEVER_SIZE 4
+#define TERMINATOR '\n'
+
 char cOdebranyZnak;
+
+enum eRecieverStatus {EMPTY, READY, OVERFLOW};
+
+struct RecieverBuffer{
+char cData[RECIEVER_SIZE];
+unsigned char ucCharCtr;
+enum eRecieverStatus eStatus;
+} sRecieverBuffer;
+
+void Reciever_PutCharacterToBuffer(char cCharacter)
+{
+	if(sRecieverBuffer.ucCharCtr == RECIEVER_SIZE)
+		sRecieverBuffer.eStatus = OVERFLOW;
+	else
+	{
+		if(cCharacter == TERMINATOR)
+		{
+			sRecieverBuffer.cData[sRecieverBuffer.ucCharCtr] = '\0';
+			sRecieverBuffer.eStatus = READY;
+			sRecieverBuffer.ucCharCtr = 0;
+		}
+		else
+		{
+			sRecieverBuffer.cData[sRecieverBuffer.ucCharCtr] = cCharacter;
+			sRecieverBuffer.ucCharCtr++;
+		}
+	}
+}
+
+enum eRecieverStatus eReciever_GetStatus(void)
+{
+	return sRecieverBuffer.eStatus;
+}
+
+void Reciever_GetStringCopy(char *ucDestination)
+{
+	unsigned char ucCharacterCounter;
+	for(ucCharacterCounter=0;sRecieverBuffer.cData[ucCharacterCounter]!=TERMINATOR;ucCharacterCounter++)
+		if(ucCharacterCounter==RECIEVER_SIZE)
+			break;
+		else
+			ucDestination[ucCharacterCounter] = sRecieverBuffer.cData[ucCharacterCounter];
+}
 
 __irq void UART0_Interrupt (void) {
    
@@ -56,26 +102,22 @@ void UART_InitWithInt(unsigned int uiBaudRate){
 
 int main (){
 	unsigned int uiPos = 0;
-	UART_InitWithInt(9600);
-	ServoInit(50);
+//	UART_InitWithInt(9600);
+//	ServoInit(50);
+	
+	Reciever_PutCharacterToBuffer ('k');
+  Reciever_PutCharacterToBuffer ('o');
+  Reciever_PutCharacterToBuffer ('d');
+  Reciever_PutCharacterToBuffer ('\n');
+	
+	sRecieverBuffer.eStatus = EMPTY;
+	Reciever_PutCharacterToBuffer ('k');
+	Reciever_PutCharacterToBuffer ('o');
+	Reciever_PutCharacterToBuffer ('d');
+	Reciever_PutCharacterToBuffer ('1');
+	Reciever_PutCharacterToBuffer ('\n');
 	
 	while(1){
-		
-	switch(cOdebranyZnak){
-		case 'c':
-			ServoCallib();
-			uiPos = 0;
-		  cOdebranyZnak = '\0';
-			break;
-		
-		case '1':
-			uiPos = uiPos + 12;
-			ServoGoTo(uiPos);
-	  	cOdebranyZnak = '\0';
-			break;
-		
-		default:
-			break;
-	}
+
 }
 }
