@@ -3,6 +3,8 @@
 #include "keyboard.h"
 #include "timer_interrupts.h"
 #include "servo.h"
+#include "string.h"
+#include "command_decoder.h"
 
 #include <LPC210X.H>
 
@@ -22,18 +24,20 @@
 
 #define mIRQ_SLOT_ENABLE                           (1<<5)
 
-#define RECIEVER_SIZE 4
+#define RECIEVER_SIZE 12
 #define TERMINATOR '\n'
 
-char cOdebranyZnak;
-
 enum eRecieverStatus {EMPTY, READY, OVERFLOW};
+
+char dupsko;
 
 struct RecieverBuffer{
 char cData[RECIEVER_SIZE];
 unsigned char ucCharCtr;
 enum eRecieverStatus eStatus;
 } sRecieverBuffer;
+
+char cReceivedString[RECIEVER_SIZE];
 
 void Reciever_PutCharacterToBuffer(char cCharacter)
 {
@@ -63,7 +67,7 @@ enum eRecieverStatus eReciever_GetStatus(void)
 void Reciever_GetStringCopy(char *ucDestination)
 {
 	unsigned char ucCharacterCounter;
-	for(ucCharacterCounter=0;sRecieverBuffer.cData[ucCharacterCounter]!=TERMINATOR;ucCharacterCounter++)
+	for(ucCharacterCounter=0;sRecieverBuffer.cData[ucCharacterCounter]!='\0';ucCharacterCounter++)
 		if(ucCharacterCounter==RECIEVER_SIZE)
 			break;
 		else
@@ -76,7 +80,8 @@ __irq void UART0_Interrupt (void) {
 
    if      ((uiCopyOfU0IIR & mINTERRUPT_PENDING_IDETIFICATION_BITFIELD) == mRX_DATA_AVALIABLE_INTERRUPT_PENDING)
    {
-      cOdebranyZnak = U0RBR;
+      Reciever_PutCharacterToBuffer(U0RBR);
+		// dupsko = U0RBR;
    } 
    
    if ((uiCopyOfU0IIR & mINTERRUPT_PENDING_IDETIFICATION_BITFIELD) == mTHRE_INTERRUPT_PENDING) 
@@ -101,23 +106,38 @@ void UART_InitWithInt(unsigned int uiBaudRate){
 }	   
 
 int main (){
-	unsigned int uiPos = 0;
-//	UART_InitWithInt(9600);
-//	ServoInit(50);
-	
-	Reciever_PutCharacterToBuffer ('k');
-  Reciever_PutCharacterToBuffer ('o');
-  Reciever_PutCharacterToBuffer ('d');
-  Reciever_PutCharacterToBuffer ('\n');
-	
+//	unsigned int uiPos = 0;
+	UART_InitWithInt(9600);
+	ServoInit(50);
 	sRecieverBuffer.eStatus = EMPTY;
-	Reciever_PutCharacterToBuffer ('k');
-	Reciever_PutCharacterToBuffer ('o');
-	Reciever_PutCharacterToBuffer ('d');
-	Reciever_PutCharacterToBuffer ('1');
-	Reciever_PutCharacterToBuffer ('\n');
-	
-	while(1){
 
+	while(1){
+		if(eReciever_GetStatus() == READY)
+		{
+			Reciever_GetStringCopy(cReceivedString);
+			switch(eDecodeCommand(cReceivedString))
+			{
+			case cCALLIB:
+				ServoCallib();
+				break;
+			
+			case cLEFT:
+				ServoGoTo(12);
+				break;
+			
+			case cRIGHT:
+				ServoGoTo(36);
+				break;
+			
+			case cERROR:
+				break;
+			}
+			sRecieverBuffer.eStatus = EMPTY;
+		}
+		else if(eReciever_GetStatus() == OVERFLOW)
+		{
+			sRecieverBuffer.eStatus = EMPTY;
+			sRecieverBuffer.ucCharCtr = 0;
+		}
 }
 }

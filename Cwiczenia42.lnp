@@ -6,6 +6,8 @@
 ".\timer.o"
 ".\timer_interrupts.o"
 ".\servo.o"
+".\string.o"
+".\command_decoder.o"
 --strict --scatter ".\Cwiczenia42.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
