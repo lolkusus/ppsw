@@ -1,31 +1,65 @@
 #include "command_decoder.h"
 #include "string.h"
 
-#define MAX_KEYWORD_STRING_LTH 6
-#define MAX_KEYWORD_NR 3
+struct RecieverBuffer{
+char cData[RECIEVER_SIZE];
+unsigned char ucCharCtr;
+enum eRecieverStatus eStatus;
+} sRecieverBuffer;
 
-typedef struct Keyword
+enum CommandType eDecodeCommand(char cTokenString[],unsigned int *uiPosition)
 {
-enum CommandType eCode;
-char cString[MAX_KEYWORD_STRING_LTH + 1];
-} Keyword;
-
-struct Keyword asKeywordList[MAX_KEYWORD_NR]= 
-{
-{cCALLIB, "callib"},
-{cLEFT, "left" },
-{cRIGHT, "right"}
-};
-
-enum CommandType eDecodeCommand(char cTokenString[])
-{
-	unsigned char ucTokenCounter;
-	for(ucTokenCounter=0;ucTokenCounter<MAX_KEYWORD_NR;ucTokenCounter++)
-	{
-		if (eCompareString(asKeywordList[ucTokenCounter].cString,cTokenString) == EQUAL) 
+	unsigned int uiHexPosition;
+	
+		if (eCompareString("callib",cTokenString) == EQUAL) 
+			return cCALLIB;
+		else if (eCompareString("goto",cTokenString) == EQUAL) 
 		{
-			return asKeywordList[ucTokenCounter].eCode;
+			for(uiHexPosition=0;cTokenString[uiHexPosition]!='0';uiHexPosition++){}
+			if(eHexStringToUInt(cTokenString+uiHexPosition,uiPosition) == OK)
+				return cGOTO;
+		}
+
+	return cERROR;
+}
+
+void Reciever_Empty(void)
+{
+	sRecieverBuffer.eStatus = EMPTY;
+	sRecieverBuffer.ucCharCtr = 0;
+}
+
+void Reciever_PutCharacterToBuffer(char cCharacter)
+{
+	if(sRecieverBuffer.ucCharCtr == RECIEVER_SIZE)
+		sRecieverBuffer.eStatus = OVERFLOW;
+	else
+	{
+		if(cCharacter == TERMINATOR)
+		{
+			sRecieverBuffer.cData[sRecieverBuffer.ucCharCtr] = '\0';
+			sRecieverBuffer.eStatus = READY;
+			sRecieverBuffer.ucCharCtr = 0;
+		}
+		else
+		{
+			sRecieverBuffer.cData[sRecieverBuffer.ucCharCtr] = cCharacter;
+			sRecieverBuffer.ucCharCtr++;
 		}
 	}
-	return cERROR;
+}
+
+enum eRecieverStatus eReciever_GetStatus(void)
+{
+	return sRecieverBuffer.eStatus;
+}
+
+void Reciever_GetStringCopy(char *ucDestination)
+{
+	unsigned char ucCharacterCounter;
+	for(ucCharacterCounter=0;sRecieverBuffer.cData[ucCharacterCounter]!='\0';ucCharacterCounter++)
+		if(ucCharacterCounter==RECIEVER_SIZE)
+			break;
+		else
+			ucDestination[ucCharacterCounter] = sRecieverBuffer.cData[ucCharacterCounter];
 }

@@ -24,55 +24,9 @@
 
 #define mIRQ_SLOT_ENABLE                           (1<<5)
 
-#define RECIEVER_SIZE 12
-#define TERMINATOR '\n'
 
-enum eRecieverStatus {EMPTY, READY, OVERFLOW};
-
-char dupsko;
-
-struct RecieverBuffer{
-char cData[RECIEVER_SIZE];
-unsigned char ucCharCtr;
-enum eRecieverStatus eStatus;
-} sRecieverBuffer;
 
 char cReceivedString[RECIEVER_SIZE];
-
-void Reciever_PutCharacterToBuffer(char cCharacter)
-{
-	if(sRecieverBuffer.ucCharCtr == RECIEVER_SIZE)
-		sRecieverBuffer.eStatus = OVERFLOW;
-	else
-	{
-		if(cCharacter == TERMINATOR)
-		{
-			sRecieverBuffer.cData[sRecieverBuffer.ucCharCtr] = '\0';
-			sRecieverBuffer.eStatus = READY;
-			sRecieverBuffer.ucCharCtr = 0;
-		}
-		else
-		{
-			sRecieverBuffer.cData[sRecieverBuffer.ucCharCtr] = cCharacter;
-			sRecieverBuffer.ucCharCtr++;
-		}
-	}
-}
-
-enum eRecieverStatus eReciever_GetStatus(void)
-{
-	return sRecieverBuffer.eStatus;
-}
-
-void Reciever_GetStringCopy(char *ucDestination)
-{
-	unsigned char ucCharacterCounter;
-	for(ucCharacterCounter=0;sRecieverBuffer.cData[ucCharacterCounter]!='\0';ucCharacterCounter++)
-		if(ucCharacterCounter==RECIEVER_SIZE)
-			break;
-		else
-			ucDestination[ucCharacterCounter] = sRecieverBuffer.cData[ucCharacterCounter];
-}
 
 __irq void UART0_Interrupt (void) {
    
@@ -81,7 +35,6 @@ __irq void UART0_Interrupt (void) {
    if      ((uiCopyOfU0IIR & mINTERRUPT_PENDING_IDETIFICATION_BITFIELD) == mRX_DATA_AVALIABLE_INTERRUPT_PENDING)
    {
       Reciever_PutCharacterToBuffer(U0RBR);
-		// dupsko = U0RBR;
    } 
    
    if ((uiCopyOfU0IIR & mINTERRUPT_PENDING_IDETIFICATION_BITFIELD) == mTHRE_INTERRUPT_PENDING) 
@@ -106,38 +59,33 @@ void UART_InitWithInt(unsigned int uiBaudRate){
 }	   
 
 int main (){
-//	unsigned int uiPos = 0;
+	unsigned int uiPos;
 	UART_InitWithInt(9600);
 	ServoInit(50);
-	sRecieverBuffer.eStatus = EMPTY;
-
+	Reciever_Empty();
+	
 	while(1){
 		if(eReciever_GetStatus() == READY)
 		{
 			Reciever_GetStringCopy(cReceivedString);
-			switch(eDecodeCommand(cReceivedString))
+			switch(eDecodeCommand(cReceivedString, &uiPos))
 			{
 			case cCALLIB:
 				ServoCallib();
 				break;
 			
-			case cLEFT:
-				ServoGoTo(12);
-				break;
-			
-			case cRIGHT:
-				ServoGoTo(36);
+			case cGOTO:
+				ServoGoTo(uiPos);
 				break;
 			
 			case cERROR:
 				break;
 			}
-			sRecieverBuffer.eStatus = EMPTY;
+			Reciever_Empty();
 		}
 		else if(eReciever_GetStatus() == OVERFLOW)
 		{
-			sRecieverBuffer.eStatus = EMPTY;
-			sRecieverBuffer.ucCharCtr = 0;
+			Reciever_Empty();
 		}
 }
 }
