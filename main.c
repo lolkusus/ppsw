@@ -3,7 +3,7 @@
 #include "keyboard.h"
 #include "timer_interrupts.h"
 #include "servo.h"
-#include "string.h"
+//#include "string.h"
 #include "command_decoder.h"
 
 #include <LPC210X.H>
@@ -35,6 +35,7 @@ __irq void UART0_Interrupt (void) {
    if      ((uiCopyOfU0IIR & mINTERRUPT_PENDING_IDETIFICATION_BITFIELD) == mRX_DATA_AVALIABLE_INTERRUPT_PENDING)
    {
       Reciever_PutCharacterToBuffer(U0RBR);
+		// LedStepLeft();
    } 
    
    if ((uiCopyOfU0IIR & mINTERRUPT_PENDING_IDETIFICATION_BITFIELD) == mTHRE_INTERRUPT_PENDING) 
@@ -59,33 +60,29 @@ void UART_InitWithInt(unsigned int uiBaudRate){
 }	   
 
 int main (){
-	unsigned int uiPos;
 	UART_InitWithInt(9600);
 	ServoInit(50);
-	Reciever_Empty();
 	
 	while(1){
 		if(eReciever_GetStatus() == READY)
 		{
 			Reciever_GetStringCopy(cReceivedString);
-			switch(eDecodeCommand(cReceivedString, &uiPos))
+			DecodeMsg(cReceivedString);
+			switch(asToken[0].uValue.eKeyword)
 			{
-			case cCALLIB:
+			case CAL:
 				ServoCallib();
 				break;
 			
-			case cGOTO:
-				ServoGoTo(uiPos);
-				break;
-			
-			case cERROR:
+			case GO:
+			{
+				if(asToken[1].eType == NUMBER)
+					ServoGoTo(asToken[1].uValue.uiNumber);
 				break;
 			}
-			Reciever_Empty();
+			default:
+				break;
 		}
-		else if(eReciever_GetStatus() == OVERFLOW)
-		{
-			Reciever_Empty();
 		}
 }
 }

@@ -10,6 +10,15 @@ enum CompResult eCompareString(char pcStr1[], char pcStr2[])
 	return EQUAL;
 }
 
+void ReplaceCharactersInString(char pcString[],char cOldChar,char cNewChar)
+{
+	unsigned char ucCharCounter;
+	for(ucCharCounter=0;pcString[ucCharCounter]!='\0';ucCharCounter++)
+	{
+		if(pcString[ucCharCounter] == cOldChar) pcString[ucCharCounter] = cNewChar;
+	}
+}
+
 enum Result eHexStringToUInt(char pcStr[],unsigned int *puiValue)
 {
 	unsigned char ucCharCounter;

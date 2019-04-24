@@ -1,29 +1,97 @@
 #include "command_decoder.h"
 #include "string.h"
 
+#define HEX_bm 0x000F
+#define MAX_KEYWORD_NR 2
+
 struct RecieverBuffer{
 char cData[RECIEVER_SIZE];
 unsigned char ucCharCtr;
 enum eRecieverStatus eStatus;
 } sRecieverBuffer;
 
-enum CommandType eDecodeCommand(char cTokenString[],unsigned int *uiPosition)
+struct Keyword asKeywordList[MAX_KEYWORD_NR]= 
 {
-	unsigned int uiHexPosition;
-	
-		if (eCompareString("callib",cTokenString) == EQUAL) 
-			return cCALLIB;
-		else if (eCompareString("goto",cTokenString) == EQUAL) 
-		{
-			for(uiHexPosition=0;cTokenString[uiHexPosition]!='0';uiHexPosition++){}
-			if(eHexStringToUInt(cTokenString+uiHexPosition,uiPosition) == OK)
-				return cGOTO;
-		}
+{GO,"goto"},
+{CAL, "callib" }
+};
 
-	return cERROR;
+struct Token asToken[MAX_TOKEN_NR];
+
+unsigned char ucFindTokensInString(char *pcString)
+{
+	unsigned char ucTokenPointer;
+	unsigned char ucDelimiterCounter;
+	char cCurrentChar;
+	enum State {TOKEN, DELIMITER};
+	enum State eState = DELIMITER;
+	ucDelimiterCounter = 0;
+	
+	for(ucTokenPointer=0;;ucTokenPointer++)
+	{
+		cCurrentChar = pcString[ucTokenPointer];
+		switch(eState)
+		{
+			case DELIMITER:
+				if(cCurrentChar == '\0') 
+					return ucDelimiterCounter;
+				else if(cCurrentChar == ' ') {}
+				else 
+				{
+					eState = TOKEN;
+					asToken[ucDelimiterCounter].uValue.pcString = pcString+ucTokenPointer;
+					ucDelimiterCounter++;
+				}
+				break;
+			case TOKEN:
+				if(cCurrentChar == '\0') 
+					return ucDelimiterCounter;
+				else if(ucDelimiterCounter == MAX_TOKEN_NR) 
+					return ucDelimiterCounter;
+				else if(cCurrentChar != ' ') {}
+				else 
+					eState = DELIMITER;
+				break;
+		}
+	}
 }
 
-void Reciever_Empty(void)
+
+enum Result eStringToKeyword (char pcStr[],enum KeywordCode *peKeywordCode)
+{
+	unsigned char ucTokenCounter;
+	for(ucTokenCounter=0;ucTokenCounter<MAX_TOKEN_NR;ucTokenCounter++)
+	{
+		if (eCompareString(pcStr,asKeywordList[ucTokenCounter].cString) == EQUAL) 
+		{
+			*peKeywordCode = asKeywordList[ucTokenCounter].eCode;
+			return OK;
+		}
+	}
+	return ERROR;
+}
+
+void DecodeTokens()
+{
+	unsigned char ucTokenCounter;
+	Token* tValue;
+	for(ucTokenCounter=0;ucTokenCounter<MAX_TOKEN_NR;ucTokenCounter++)
+	{
+		tValue = &asToken[ucTokenCounter];
+		if (eStringToKeyword(tValue->uValue.pcString,&tValue->uValue.eKeyword) == OK) tValue->eType = KEYWORD;
+		else if (eHexStringToUInt(tValue->uValue.pcString,&tValue->uValue.uiNumber) == OK) tValue->eType = NUMBER;
+		else tValue->eType = STRING;
+	}
+}
+
+void DecodeMsg(char *pcString)
+{
+	ucFindTokensInString(pcString);
+	ReplaceCharactersInString(pcString,' ','\0');
+	DecodeTokens();
+}
+
+void Reciever_Empty()
 {
 	sRecieverBuffer.eStatus = EMPTY;
 	sRecieverBuffer.ucCharCtr = 0;
@@ -32,7 +100,10 @@ void Reciever_Empty(void)
 void Reciever_PutCharacterToBuffer(char cCharacter)
 {
 	if(sRecieverBuffer.ucCharCtr == RECIEVER_SIZE)
+	{
 		sRecieverBuffer.eStatus = OVERFLOW;
+		Reciever_Empty();
+	}
 	else
 	{
 		if(cCharacter == TERMINATOR)
@@ -58,8 +129,11 @@ void Reciever_GetStringCopy(char *ucDestination)
 {
 	unsigned char ucCharacterCounter;
 	for(ucCharacterCounter=0;sRecieverBuffer.cData[ucCharacterCounter]!='\0';ucCharacterCounter++)
+	{
 		if(ucCharacterCounter==RECIEVER_SIZE)
 			break;
 		else
 			ucDestination[ucCharacterCounter] = sRecieverBuffer.cData[ucCharacterCounter];
+	}
+	Reciever_Empty();
 }
