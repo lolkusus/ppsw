@@ -15,6 +15,9 @@ int main (){
 	
 	Transmiter_SendString(cString);
 	
-	while(1){
+	while(1)
+	{
+		if(Transmiter_GetStatus() == FREE)
+			Transmiter_SendString(cString);
 	}
 }
