@@ -29,7 +29,6 @@ unsigned char cCharCtr;
 struct TransmiterBuffer sTransmiterBuffer;
 
 __irq void UART0_Interrupt (void) {
-   
    unsigned int uiCopyOfU0IIR=U0IIR;
 
    if      ((uiCopyOfU0IIR & mINTERRUPT_PENDING_IDETIFICATION_BITFIELD) == mRX_DATA_AVALIABLE_INTERRUPT_PENDING)
@@ -39,8 +38,12 @@ __irq void UART0_Interrupt (void) {
    
    if ((uiCopyOfU0IIR & mINTERRUPT_PENDING_IDETIFICATION_BITFIELD) == mTHRE_INTERRUPT_PENDING) 
    {
-			if (Transmiter_GetStatus() == BUSY)
+			if ((Transmiter_GetStatus() == BUSY) & (sTransmiterBuffer.fLastCharacter == 0))
+			{
 				U0THR = Transmiter_GetCharacterFromBuffer();
+			}
+			else if (sTransmiterBuffer.fLastCharacter == 1)
+				sTransmiterBuffer.fLastCharacter = 0;
    }
 
    VICVectAddr = 0;
@@ -74,7 +77,7 @@ char Transmiter_GetCharacterFromBuffer() {
 	}
 	else
 	{
-		sTransmiterBuffer.cCharCtr++;
+	  sTransmiterBuffer.cCharCtr++;
 		return sTransmiterBuffer.cData[sTransmiterBuffer.cCharCtr-1];
 	}
 }
@@ -95,5 +98,7 @@ void Transmiter_SendString(char cString[]){
 
 enum eTransmiterStatus Transmiter_GetStatus(void)
 {
+	if (sTransmiterBuffer.fLastCharacter == 1)
+		return BUSY;
 	return sTransmiterBuffer.eStatus;
 }

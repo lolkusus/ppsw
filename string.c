@@ -1,5 +1,7 @@
 #include "string.h"
 
+#define HEX_bm 0x000F
+
 enum CompResult eCompareString(char pcStr1[], char pcStr2[])
 {
 	unsigned char ucCharCounter;
@@ -36,6 +38,30 @@ enum Result eHexStringToUInt(char pcStr[],unsigned int *puiValue)
 			*puiValue = *puiValue | (pcStr[ucCharCounter] - '0');
 	}
 	return OK;
+}
+
+void UIntToHexStr(unsigned int uiValue, char pcStr[])
+{
+	unsigned char ucNibbleCounter;
+	unsigned char ucCurrentNibble;
+	pcStr[0] = '0';
+	pcStr[1] = 'x';
+	for(ucNibbleCounter=0;ucNibbleCounter<4;ucNibbleCounter++)
+	{
+		ucCurrentNibble = ((uiValue >> ucNibbleCounter*4) & HEX_bm);
+		if(ucCurrentNibble>9) 
+			pcStr[5-ucNibbleCounter] = ucCurrentNibble - 10 + 'A';
+		else 
+			pcStr[5-ucNibbleCounter] = ucCurrentNibble + '0';
+	}
+	pcStr[6] = '\0';
+}
+
+void AppendUIntToString (unsigned int uiValue, char pcDestinationStr[])
+{
+	unsigned char ucEndPointer;
+	for(ucEndPointer=0;pcDestinationStr[ucEndPointer]!='\0';ucEndPointer++) {}
+	UIntToHexStr(uiValue,pcDestinationStr+ucEndPointer);
 }
 
 void CopyString(char pcSource[], char pcDestination[])

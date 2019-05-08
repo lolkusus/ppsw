@@ -1,4 +1,4 @@
-#define TRANSMITER_SIZE 16
+#define TRANSMITER_SIZE 64
 
 void UART_InitWithInt(unsigned int uiBaudRate);
 
