@@ -37,3 +37,13 @@ enum Result eHexStringToUInt(char pcStr[],unsigned int *puiValue)
 	}
 	return OK;
 }
+
+void CopyString(char pcSource[], char pcDestination[])
+{
+	unsigned char ucCharCounter;
+	for(ucCharCounter=0;pcSource[ucCharCounter]!='\0';ucCharCounter++)
+	{
+		pcDestination[ucCharCounter] = pcSource[ucCharCounter];
+	}
+	pcDestination[ucCharCounter] = '\0';
+}
