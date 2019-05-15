@@ -33,8 +33,6 @@ union TokenValue uValue;
 
 extern struct Token asToken[MAX_TOKEN_NR];
 
-unsigned char ucTokenCount;
-
 void DecodeMsg(char *pcString);
 
 enum eRecieverStatus {EMPTY, READY, OVERFLOW};

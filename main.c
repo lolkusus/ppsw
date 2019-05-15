@@ -6,82 +6,43 @@
 #include "string.h"
 #include "command_decoder.h"
 #include "uart.h"
+#include <LPC21xx.H>
 
-typedef struct Watch {
-unsigned char ucMinutes, ucSeconds;
-unsigned char fSecondsValueChanged, fMinutesValueChanged;
-}Watch;
+//ADControl
+#define ADPinSel (1<<22)
+#define ADCRSel (1<<0)
+#define ADCClks (7<<17)
+#define ADCEnable (1<<21)
+#define ADCStart (1<<24)
+//ADData
+#define ADCDone (1<<31)
+#define ADR_bm 0xFFC0
 
-struct Watch sWatch;
+unsigned char servoPos;
 
-unsigned int uiCalcValue;
-unsigned char fCalcChanged;
+void ADInit()
+{
+	PINSEL1 = ADPinSel; 
+	ADCR = ADCRSel | ADCClks | ADCEnable;
+}
 
-char cReceivedString[RECIEVER_SIZE];
-
-void WatchUpdate(){
-	sWatch.ucSeconds++;
-	sWatch.fSecondsValueChanged = 1;
-	if (sWatch.ucSeconds == 60)
-	{
-		sWatch.ucSeconds = 0;
-		sWatch.ucMinutes++;
-		sWatch.fMinutesValueChanged = 1;
-	}
-	if (sWatch.ucMinutes == 60)
-	{
-		sWatch.ucMinutes = 0;
-	}
+unsigned int ADRead()
+{
+	ADCR = ADCR | ADCStart;
+	while((ADDR & ADCDone) == 0) {}
+	return ((ADDR & ADR_bm) >> 6);
 }
 
 int main (){
-	char cSecString[5] = "sec ";
-	char cMinString[5] = "min ";
-	char cCalcString[6] = "calc ";
-	char cTransmitString[32];
-	
-	Timer0Interrupts_Init(1000000,&WatchUpdate);
-	
-	UART_InitWithInt(9600);
+	ServoInit(50);
+	ADInit();
+	ServoCallib();
+	servoPos = 0;
 	
 	while(1)
 	{
-		if (Transmiter_GetStatus() == FREE)
-		{
-			if(sWatch.fMinutesValueChanged == 1)
-			{
-				CopyString(cMinString,cTransmitString);
-				AppendUIntToString(sWatch.ucMinutes,cTransmitString);
-				sWatch.fMinutesValueChanged = 0;
-				Transmiter_SendString(cTransmitString);
-			}
-			else if (sWatch.fSecondsValueChanged == 1)
-			{
-				CopyString(cSecString,cTransmitString);
-				AppendUIntToString(sWatch.ucSeconds,cTransmitString);
-				sWatch.fSecondsValueChanged = 0;
-				Transmiter_SendString(cTransmitString);
-			}
-			else if (fCalcChanged == 1)
-			{
-				CopyString(cCalcString,cTransmitString);
-				AppendUIntToString(uiCalcValue,cTransmitString);
-				Transmiter_SendString(cTransmitString);
-				fCalcChanged = 0;
-			}
-		}
-		if(eReciever_GetStatus() == READY)
-			{
-				Reciever_GetStringCopy(cReceivedString);
-				DecodeMsg(cReceivedString);
-				if((ucTokenCount > 0 ) & (asToken[0].eType == KEYWORD))
-				{
-					if((asToken[0].uValue.eKeyword == CALC) & (asToken[1].eType == NUMBER))
-					{
-						uiCalcValue = asToken[1].uValue.uiNumber * 2;
-						fCalcChanged = 1;
-					}
-				}
-			}
+		servoPos = (ADRead() / 21);
+		ServoGoTo(servoPos);
 	}
+ 
 }

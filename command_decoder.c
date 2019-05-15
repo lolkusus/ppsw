@@ -59,7 +59,7 @@ unsigned char ucFindTokensInString(char *pcString)
 enum Result eStringToKeyword (char pcStr[],enum KeywordCode *peKeywordCode)
 {
 	unsigned char ucTokenCounter;
-	for(ucTokenCounter=0;ucTokenCounter<ucTokenCount;ucTokenCounter++)
+	for(ucTokenCounter=0;ucTokenCounter<MAX_TOKEN_NR;ucTokenCounter++)
 	{
 		if (eCompareString(pcStr,asKeywordList[ucTokenCounter].cString) == EQUAL) 
 		{
@@ -85,7 +85,7 @@ void DecodeTokens()
 
 void DecodeMsg(char *pcString)
 {
-	ucTokenCount = ucFindTokensInString(pcString);
+	ucFindTokensInString(pcString);
 	ReplaceCharactersInString(pcString,' ','\0');
 	DecodeTokens();
 }
