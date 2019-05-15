@@ -1,5 +1,5 @@
 #define RECIEVER_SIZE 32
-#define TERMINATOR '\n'
+#define TERMINATOR 0x0D
 #define MAX_TOKEN_NR 2
 #define MAX_KEYWORD_STRING_LTH 6
 
@@ -10,7 +10,7 @@ typedef enum TokenType
 {KEYWORD, NUMBER, STRING} TokenType;
 
 typedef enum KeywordCode 
-{GO, CAL, COS} KeywordCode;
+{CALC} KeywordCode;
 
 typedef struct Keyword
 {
@@ -32,6 +32,8 @@ union TokenValue uValue;
 } Token;
 
 extern struct Token asToken[MAX_TOKEN_NR];
+
+unsigned char ucTokenCount;
 
 void DecodeMsg(char *pcString);
 

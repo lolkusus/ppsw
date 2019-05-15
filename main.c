@@ -14,6 +14,11 @@ unsigned char fSecondsValueChanged, fMinutesValueChanged;
 
 struct Watch sWatch;
 
+unsigned int uiCalcValue;
+unsigned char fCalcChanged;
+
+char cReceivedString[RECIEVER_SIZE];
+
 void WatchUpdate(){
 	sWatch.ucSeconds++;
 	sWatch.fSecondsValueChanged = 1;
@@ -32,7 +37,7 @@ void WatchUpdate(){
 int main (){
 	char cSecString[5] = "sec ";
 	char cMinString[5] = "min ";
-	char cSpace[2] = " ";
+	char cCalcString[6] = "calc ";
 	char cTransmitString[32];
 	
 	Timer0Interrupts_Init(1000000,&WatchUpdate);
@@ -47,11 +52,7 @@ int main (){
 			{
 				CopyString(cMinString,cTransmitString);
 				AppendUIntToString(sWatch.ucMinutes,cTransmitString);
-				AppendString(cSpace,cTransmitString);
-				//AppendString(cSecString,cTransmitString);
-				//AppendUIntToString(sWatch.ucSeconds,cTransmitString);
 				sWatch.fMinutesValueChanged = 0;
-				//sWatch.fSecondsValueChanged = 0;
 				Transmiter_SendString(cTransmitString);
 			}
 			else if (sWatch.fSecondsValueChanged == 1)
@@ -61,6 +62,26 @@ int main (){
 				sWatch.fSecondsValueChanged = 0;
 				Transmiter_SendString(cTransmitString);
 			}
+			else if (fCalcChanged == 1)
+			{
+				CopyString(cCalcString,cTransmitString);
+				AppendUIntToString(uiCalcValue,cTransmitString);
+				Transmiter_SendString(cTransmitString);
+				fCalcChanged = 0;
+			}
 		}
+		if(eReciever_GetStatus() == READY)
+			{
+				Reciever_GetStringCopy(cReceivedString);
+				DecodeMsg(cReceivedString);
+				if((ucTokenCount > 0 ) & (asToken[0].eType == KEYWORD))
+				{
+					if((asToken[0].uValue.eKeyword == CALC) & (asToken[1].eType == NUMBER))
+					{
+						uiCalcValue = asToken[1].uValue.uiNumber * 2;
+						fCalcChanged = 1;
+					}
+				}
+			}
 	}
 }

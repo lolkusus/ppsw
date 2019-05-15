@@ -90,6 +90,7 @@ void Transmiter_SendString(char cString[]){
 		sTransmiterBuffer.cData[ucCopyCounter] = cString[ucCopyCounter];
 	}
 	
+	sTransmiterBuffer.cData[ucCopyCounter] = cString[ucCopyCounter];
 	sTransmiterBuffer.eStatus = BUSY;
 	sTransmiterBuffer.fLastCharacter = 0;
 	sTransmiterBuffer.cCharCtr = 1;

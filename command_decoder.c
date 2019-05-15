@@ -2,7 +2,7 @@
 #include "string.h"
 
 #define HEX_bm 0x000F
-#define MAX_KEYWORD_NR 2
+#define MAX_KEYWORD_NR 1
 
 struct RecieverBuffer{
 char cData[RECIEVER_SIZE];
@@ -12,8 +12,7 @@ enum eRecieverStatus eStatus;
 
 struct Keyword asKeywordList[MAX_KEYWORD_NR]= 
 {
-{GO,"goto"},
-{CAL, "callib" }
+{CALC,"calc"},
 };
 
 struct Token asToken[MAX_TOKEN_NR];
@@ -60,7 +59,7 @@ unsigned char ucFindTokensInString(char *pcString)
 enum Result eStringToKeyword (char pcStr[],enum KeywordCode *peKeywordCode)
 {
 	unsigned char ucTokenCounter;
-	for(ucTokenCounter=0;ucTokenCounter<MAX_TOKEN_NR;ucTokenCounter++)
+	for(ucTokenCounter=0;ucTokenCounter<ucTokenCount;ucTokenCounter++)
 	{
 		if (eCompareString(pcStr,asKeywordList[ucTokenCounter].cString) == EQUAL) 
 		{
@@ -86,7 +85,7 @@ void DecodeTokens()
 
 void DecodeMsg(char *pcString)
 {
-	ucFindTokensInString(pcString);
+	ucTokenCount = ucFindTokensInString(pcString);
 	ReplaceCharactersInString(pcString,' ','\0');
 	DecodeTokens();
 }
