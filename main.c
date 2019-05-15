@@ -48,10 +48,10 @@ int main (){
 				CopyString(cMinString,cTransmitString);
 				AppendUIntToString(sWatch.ucMinutes,cTransmitString);
 				AppendString(cSpace,cTransmitString);
-				AppendString(cSecString,cTransmitString);
-				AppendUIntToString(sWatch.ucSeconds,cTransmitString);
+				//AppendString(cSecString,cTransmitString);
+				//AppendUIntToString(sWatch.ucSeconds,cTransmitString);
 				sWatch.fMinutesValueChanged = 0;
-				sWatch.fSecondsValueChanged = 0;
+				//sWatch.fSecondsValueChanged = 0;
 				Transmiter_SendString(cTransmitString);
 			}
 			else if (sWatch.fSecondsValueChanged == 1)
